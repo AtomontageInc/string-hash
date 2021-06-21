@@ -10,10 +10,10 @@
 #include <functional>
 
 
-namespace detail
+namespace sh::detail
 {
-	using uint32 = unsigned;
-	using uint64 = unsigned long long;
+	using uint32 = uint32_t;
+	using uint64 = uint64_t;
 
 	template < typename H >
 	struct fnv_hash_values;
@@ -85,12 +85,12 @@ namespace detail
 		constexpr explicit operator bool() const { return is_valid(); }
 		constexpr H value() const { return m_value; }
 	protected:
-		hash_type m_value;
+		hash_type m_value{ 0 };
 	};
 
 	using shash32 = string_hash< uint32 >;
 	using shash64 = string_hash< uint64 >;
-	using shash   = string_hash< std::size_t >;
+	//using shash   = string_hash< std::size_t >;
 
 	constexpr shash32 operator "" _sh32( const char* str, std::size_t len )
 	{
@@ -102,10 +102,10 @@ namespace detail
 		return shash64( detail::fnv_hash< uint64 >::hash( str, len ) );
 	}
 
-	constexpr shash operator "" _sh( const char* str, std::size_t len )
-	{
-		return shash( detail::fnv_hash< std::size_t >::hash( str, len ) );
-	}
+	//constexpr shash operator "" _sh( const char* str, std::size_t len )
+	//{
+	//	return shash( detail::fnv_hash< std::size_t >::hash( str, len ) );
+	//}
 
 	template < typename H >
 	constexpr bool operator==( const string_hash<H>& lhs, const string_hash<H>& rhs )
@@ -135,24 +135,22 @@ namespace detail
 
 namespace std
 {
-
 	template < typename H >
-	struct hash<detail::string_hash<H>>
+	struct hash<sh::detail::string_hash<H>>
 	{
-		std::size_t operator()( const detail::string_hash<H>& sh ) const
+		std::size_t operator()( const sh::detail::string_hash<H>& sh ) const
 		{
 			return std::size_t( sh.value() );
 		}
 	};
-
 }
 
-using detail::operator "" _sh32;
-using detail::operator "" _sh64;
-using detail::operator "" _sh;
-using detail::shash32;
-using detail::shash64;
-using detail::shash;
-using detail::string_hash;
+using sh::detail::operator "" _sh32;
+using sh::detail::operator "" _sh64;
+//using sh::detail::operator "" _sh;
+using sh::detail::shash32;
+using sh::detail::shash64;
+//using sh::detail::shash;
+using sh::detail::string_hash;
 
 #endif // NV_STRING_HASH_HPP
