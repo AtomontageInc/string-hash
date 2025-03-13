@@ -6,6 +6,7 @@
 #ifndef NV_STRING_HASH_HPP
 #define NV_STRING_HASH_HPP
 
+#include <cstdint>
 #include <string>
 #include <functional>
 
